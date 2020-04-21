@@ -21,6 +21,8 @@ app.use(session({
     }
 }));
 
+const db = require("./__connect_db");
+
 app.get("/", (request, response) => {
     //response.send("adfef");
     response.render("home", { name: "lllsdfeoks" })
@@ -136,7 +138,16 @@ app.get("/try-session",(req,res)=>{
     });
 
 });
+app.get("/try-db",(req,res)=>{
+    var sql="SELECT * FROM address_book LIMIT 0,5";
+    db.query(sql,(error,results,fields)=>{
+        console.log(fields);
 
+        res.json(results);
+
+    });
+
+});
 app.use(express.static("public"));
 
 app.use((req, resp) => {
