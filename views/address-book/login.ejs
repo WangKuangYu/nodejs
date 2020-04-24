@@ -1,0 +1,62 @@
+<%- include("../parts/html-head")%>
+
+<%- include("../parts/navbar")%>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+
+                <div class="card-body">
+                    <h5 class="card-title">log in</h5>
+                </div>
+            </div>
+
+            <form name="form1" onsubmit="return checkform()">
+                <div class="form-group">
+
+                    <label for="account">Account</label>
+                    <input type="text" class="form-control" id="account" name="account">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password">
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            <div id="info-bar" class="alert alert-success" role="alert" style="display: none">
+                A simple success alert—check it out!
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function checkform() {
+
+        const infoBar = $('#info-bar');
+        
+        $.post('/address-book/login', $(document.form1).serialize(), function (data) {
+
+            console.log(data);
+
+            if(data.success){
+                location.href="/address-book/list";
+            } else {
+                infoBar.removeClass('alert-success').addClass('alert-danger').text('account or password false');
+            }
+            infoBar.slideDown();
+
+
+        }, 'json');
+
+
+        return false;
+    }
+
+
+</script>
+
+<%- include("../parts/html-foot")%>

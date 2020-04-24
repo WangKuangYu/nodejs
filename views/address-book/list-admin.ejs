@@ -1,0 +1,88 @@
+<%- include("../parts/html-head")%>
+
+<%- include("../parts/navbar")%>
+
+<div class="container">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item <%= page<=1 ? 'disabled' : '' %>">
+                <a class="page-link" href="/address-book/list/<%= page-1 %>">
+                    &lt;&lt;
+                </a></li>
+
+            <% for(let i=1; i<=totalPage; i++){ %>
+            <li class="page-item <%= page==i ? 'active' : '' %>">
+                <a class="page-link" href="/address-book/list/<%= i %>"><%= i %></a>
+            </li>
+            <% } %>
+
+            <li class="page-item <%= page>=totalPage ? 'disabled' : '' %>">
+                <a class="page-link" href="/address-book/list/<%= page+1 %>">
+                    &gt;&gt;
+                </a></li>
+            
+        </ul>
+    </nav>
+    <table class="table table-striped table-dark">
+        <thead>
+            <tr>
+                <th scope="col">sid</th>
+                <th scope="col">name</th>
+                <th scope="col">email</th>
+                <th scope="col">address</th>
+                <th scope="col">mobile</th>
+                <th scope="col">birthday</th>
+                <th scope="col">Delete</th>
+                <th scope="col">Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for(let i of row){ %>
+            <tr data-sid="<%= i.s_id %>">
+                <td><%= i.s_id %></td>
+                <td><%= i.name %></td>
+                <td><%= i.email %></td>
+                <td><%= i.address %></td>
+                <td><%= i.mobile %></td>
+                <td><%= i.birthday %></td>
+                <td><a class="del-link" href="/address-book/del/<%= i.s_id %>">
+                    <i class="fas fa-trash-alt"></i>
+                </a></td>
+                <td><a href="/address-book/edit/<%= i.s_id %>">
+                        <i class="fas fa-user-edit"></i>
+                </a></td>
+            </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>
+
+<script>
+
+
+    const del =$(".del-link");
+
+    del.click(function(event){
+       
+
+     
+
+        const tr = $(event.target.closest("tr"));
+        const sid = tr.attr("data-sid");
+
+        if(!confirm(`pls sure to delete ${sid}`)){
+
+            event.preventDefault();
+
+        }
+        else{
+            alert(`${sid} deleted`);
+        }
+
+
+    });
+
+
+</script>
+
+<%- include("../parts/html-foot")%>

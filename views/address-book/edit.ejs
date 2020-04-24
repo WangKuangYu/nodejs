@@ -1,0 +1,81 @@
+<%- include("../parts/html-head")%>
+
+<%- include("../parts/navbar")%>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+
+                <div class="card-body">
+                    <h5 class="card-title">edit data</h5>
+                </div>
+            </div>
+
+            <form name="form1" onsubmit="return checkform()">
+                <div class="form-group">
+
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" value="<%= row.name %>">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input type="email" class="form-control" id="email" name="email" value="<%= row.email %>">
+                </div>
+                <div class="form-group">
+                    <label for="mobile">Mobile</label>
+                    <input type="text" class="form-control" id="mobile" name="mobile" value="<%= row.mobile %>">
+                </div>
+                <div class="form-group">
+                    <label for="birthday">Birthday</label>
+                    <input type="date" class="form-control" id="birthday" name="birthday" value="<%= row.birthday %>">
+                </div>
+                <div class="form-group">
+                    <label for="address">address</label>
+                    <textarea class="form-control" id="address" name="address" cols="10" rows="5"><%= row.address %></textarea>
+
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            <div id="info-bar" class="alert alert-success" role="alert" style="display: none">
+                A simple success alert—check it out!
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    
+    
+    //const row = <%- JSON.stringify(row) %>;
+    
+    function checkform() {
+
+
+
+        const infoBar = $('#info-bar');
+        
+        $.post('/address-book/edit/<%= row.s_id %>', $(document.form1).serialize(), function (data) {
+
+            console.log(data);
+
+            if(data.success){
+                infoBar.removeClass('alert-danger').addClass('alert-success').text(data.info);
+            } else {
+                infoBar.removeClass('alert-success').addClass('alert-danger').text(data.info);
+            }
+            infoBar.slideDown();
+
+
+        }, 'json');
+
+
+        return false;
+    }
+
+
+</script>
+
+<%- include("../parts/html-foot")%>

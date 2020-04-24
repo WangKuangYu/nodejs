@@ -3,6 +3,10 @@ const multer = require("multer");
 const upload = multer({ dest: "tmp_uploads/" });
 const fs = require("fs");
 const session = require("express-session");
+const cors = require('cors');
+const axios = require('axios');
+const cheerio = require('cheerio');
+
 
 const app = express();
 
@@ -21,11 +25,26 @@ app.use(session({
     }
 }));
 
+app.use(cors());
+
+app.use((req, res, next)=>{
+    res.locals.pageName ="";
+    req.query.from_middleware = 'hello';
+
+    res.locals.isAdmin= false;
+    if(req.session.admin && req.session.admin.account)
+    {
+        res.locals.admin = req.session.admin;
+        res.locals.isAdmin= true;
+    }
+    next();
+});
+
 const db = require("./__connect_db");
 
 app.get("/", (request, response) => {
     //response.send("adfef");
-    response.render("home", { name: "lllsdfeoks" })
+    response.render("home", { name: "首頁" })
 });
 app.get("/sales-json", (request, response) => {
     //response.send("adfef");
@@ -141,13 +160,34 @@ app.get("/try-session",(req,res)=>{
 app.get("/try-db",(req,res)=>{
     var sql="SELECT * FROM address_book LIMIT 0,5";
     db.query(sql,(error,results,fields)=>{
-        console.log(fields);
+       // console.log(fields);
 
         res.json(results);
 
     });
 
 });
+app.get("/just-pending",(req,res)=>{
+
+
+
+});
+app.get("/try-axios",(req,res)=>{
+    axios.get("https://www.gamer.com.tw/")
+    .then(response=>{
+        let $ = cheerio.load(response.data);
+        let str="";
+
+        $("img").each(function(i,el){
+            let src =$(this).attr("src");
+            str+=`<img src="${src}"><br>`;
+        });
+        res.send(str);
+    });
+});
+
+app.use("/address-book" , require("./address_book"));
+
 app.use(express.static("public"));
 
 app.use((req, resp) => {
